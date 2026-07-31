@@ -1,30 +1,53 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Create Post</title>
-</head>
-<body>
+@extends('layouts.app')
 
-<h1>Create New Post</h1>
+@section('content')
+
+<h1 class="mb-4">Create New Post</h1>
 
 <form action="{{ route('posts.store') }}" method="POST">
+
     @csrf
 
-    <label>Title</label><br>
-    <input type="text" name="title"><br><br>
+    <div class="mb-3">
+        <label class="form-label">Title</label>
 
-    <label>Content</label><br>
-    <textarea name="content" rows="6" cols="50"></textarea><br><br>
+        <input
+            type="text"
+            name="title"
+            class="form-control"
+            value="{{ old('title') }}"
+        >
+    </div>
 
-    <label>Published At</label><br>
-    <input type="datetime-local" name="published_at"><br><br>
+    <div class="mb-3">
+        <label class="form-label">Content</label>
 
-    <button type="submit">Create Post</button>
+        <textarea
+            name="content"
+            rows="6"
+            class="form-control"
+        >{{ old('content') }}</textarea>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Published At</label>
+
+        <input
+            type="datetime-local"
+            name="published_at"
+            class="form-control"
+            value="{{ old('published_at') }}"
+        >
+    </div>
+
+    <button class="btn btn-primary">
+        Create Post
+    </button>
+
+    <a href="{{ route('posts.index') }}" class="btn btn-secondary">
+        Cancel
+    </a>
+
 </form>
 
-<br>
-
-<a href="{{ route('posts.index') }}">Back to Posts</a>
-
-</body>
-</html>
+@endsection

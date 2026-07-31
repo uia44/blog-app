@@ -1,36 +1,54 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>Edit Post</title>
-</head>
-<body>
+@extends('layouts.app')
 
-<h1>Edit Post</h1>
+@section('content')
+
+<h1 class="mb-4">Edit Post</h1>
 
 <form action="{{ route('posts.update', $post) }}" method="POST">
+
     @csrf
     @method('PUT')
 
-    <label>Title</label><br>
-    <input type="text" name="title" value="{{ old('title', $post->title) }}"><br><br>
+    <div class="mb-3">
+        <label class="form-label">Title</label>
 
-    <label>Content</label><br>
-    <textarea name="content" rows="6" cols="50">{{ old('content', $post->content) }}</textarea><br><br>
+        <input
+            type="text"
+            name="title"
+            class="form-control"
+            value="{{ old('title', $post->title) }}"
+        >
+    </div>
 
-    <label>Published At</label><br>
-    <input
-        type="datetime-local"
-        name="published_at"
-        value="{{ old('published_at', optional($post->published_at)->format('Y-m-d\TH:i')) }}"
-    ><br><br>
+    <div class="mb-3">
+        <label class="form-label">Content</label>
 
-    <button type="submit">Update Post</button>
+        <textarea
+            name="content"
+            rows="6"
+            class="form-control"
+        >{{ old('content', $post->content) }}</textarea>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Published At</label>
+
+        <input
+            type="datetime-local"
+            name="published_at"
+            class="form-control"
+            value="{{ old('published_at', optional($post->published_at)->format('Y-m-d\TH:i')) }}"
+        >
+    </div>
+
+    <button class="btn btn-success">
+        Update Post
+    </button>
+
+    <a href="{{ route('posts.index') }}" class="btn btn-secondary">
+        Cancel
+    </a>
+
 </form>
 
-<br>
-
-<a href="{{ route('posts.index') }}">Back to Posts</a>
-
-</body>
-</html>
+@endsection
