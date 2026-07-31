@@ -51,6 +51,11 @@
             {{ $post->published_at?->format('d M Y, H:i') ?? 'Draft' }}
         </p>
 
+        <p>
+            <strong>Category:</strong>
+            {{ $post->category?->name ?? 'None' }}
+        </p>
+
         <a href="{{ route('posts.show', $post) }}" class="btn btn-info btn-sm">
             View
         </a>

@@ -9,7 +9,7 @@ class PostController extends Controller
 {
     public function index(Request $request)
     {
-        $posts = Post::query();
+        $posts = Post::with('category');
 
         if ($request->filled('search')) {
             $posts->where('title', 'like', '%' . $request->search . '%');
@@ -22,7 +22,9 @@ class PostController extends Controller
 
     public function create()
     {
-        return view('posts.create');
+        $categories = \App\Models\Category::orderBy('name')->get();
+
+        return view('posts.create', compact('categories'));
     }
 
     public function store(Request $request)
@@ -31,6 +33,7 @@ class PostController extends Controller
             'title' => 'required|max:255',
             'content' => 'required',
             'published_at' => 'nullable|date',
+            'category_id' => 'nullable|exists:categories,id',
         ]);
 
         Post::create($validated);
@@ -46,7 +49,9 @@ class PostController extends Controller
 
     public function edit(Post $post)
     {
-        return view('posts.edit', compact('post'));
+        $categories = \App\Models\Category::orderBy('name')->get();
+
+        return view('posts.edit', compact('post', 'categories'));
     }
 
     public function update(Request $request, Post $post)
@@ -55,6 +60,7 @@ class PostController extends Controller
             'title' => 'required|max:255',
             'content' => 'required',
             'published_at' => 'nullable|date',
+            'category_id' => 'nullable|exists:categories,id',
         ]);
 
         $post->update($validated);

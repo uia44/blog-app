@@ -17,6 +17,11 @@
                     {{ $post->published_at?->format('d M Y, H:i') ?? 'Draft' }}
                 </p>
 
+                <p>
+                    <strong>Category:</strong>
+                    {{ $post->category?->name ?? 'None' }}
+                </p>
+
                 <hr>
 
                 <p class="card-text">
@@ -45,6 +50,7 @@
                         <button class="btn btn-danger">
                             Delete
                         </button>
+
                     </form>
 
                 </div>
