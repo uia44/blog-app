@@ -22,7 +22,20 @@
                     {{ $post->category?->name ?? 'None' }}
                 </p>
 
+                <p>
+                    <strong>Author:</strong>
+                    {{ $post->user?->name ?? 'Unknown' }}
+                </p>
+
                 <hr>
+
+                @if($post->image)
+                    <img
+                        src="{{ asset('storage/' . $post->image) }}"
+                        alt="{{ $post->title }}"
+                        class="img-fluid rounded mb-3"
+                    >
+                @endif
 
                 <p class="card-text">
                     {{ $post->content }}
@@ -34,24 +47,30 @@
                         Back to Posts
                     </a>
 
-                    <a href="{{ route('posts.edit', $post) }}" class="btn btn-warning">
-                        Edit
-                    </a>
+                    @auth
+                        @if(auth()->id() === $post->user_id)
 
-                    <form
-                        action="{{ route('posts.destroy', $post) }}"
-                        method="POST"
-                        class="d-inline"
-                        onsubmit="return confirm('Are you sure you want to delete this post?')"
-                    >
-                        @csrf
-                        @method('DELETE')
+                            <a href="{{ route('posts.edit', $post) }}" class="btn btn-warning">
+                                Edit
+                            </a>
 
-                        <button class="btn btn-danger">
-                            Delete
-                        </button>
+                            <form
+                                action="{{ route('posts.destroy', $post) }}"
+                                method="POST"
+                                class="d-inline"
+                                onsubmit="return confirm('Are you sure you want to delete this post?')"
+                            >
+                                @csrf
+                                @method('DELETE')
 
-                    </form>
+                                <button class="btn btn-danger">
+                                    Delete
+                                </button>
+
+                            </form>
+
+                        @endif
+                    @endauth
 
                 </div>
 

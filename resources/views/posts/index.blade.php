@@ -22,9 +22,11 @@
 
     </form>
 
-    <a href="{{ route('posts.create') }}" class="btn btn-primary">
-        Create New Post
-    </a>
+    @auth
+        <a href="{{ route('posts.create') }}" class="btn btn-primary">
+            Create New Post
+        </a>
+    @endauth
 
 </div>
 
@@ -65,27 +67,38 @@
             {{ $post->category?->name ?? 'None' }}
         </p>
 
+        <p>
+            <strong>Author:</strong>
+            {{ $post->user?->name ?? 'Unknown' }}
+        </p>
+
         <a href="{{ route('posts.show', $post) }}" class="btn btn-info btn-sm">
             View
         </a>
 
-        <a href="{{ route('posts.edit', $post) }}" class="btn btn-warning btn-sm">
-            Edit
-        </a>
+        @auth
+            @if(auth()->id() === $post->user_id)
 
-        <form
-            action="{{ route('posts.destroy', $post) }}"
-            method="POST"
-            class="d-inline"
-            onsubmit="return confirm('Are you sure you want to delete this post?')"
-        >
-            @csrf
-            @method('DELETE')
+                <a href="{{ route('posts.edit', $post) }}" class="btn btn-warning btn-sm">
+                    Edit
+                </a>
 
-            <button class="btn btn-danger btn-sm">
-                Delete
-            </button>
-        </form>
+                <form
+                    action="{{ route('posts.destroy', $post) }}"
+                    method="POST"
+                    class="d-inline"
+                    onsubmit="return confirm('Are you sure you want to delete this post?')"
+                >
+                    @csrf
+                    @method('DELETE')
+
+                    <button class="btn btn-danger btn-sm">
+                        Delete
+                    </button>
+                </form>
+
+            @endif
+        @endauth
 
     </div>
 </div>

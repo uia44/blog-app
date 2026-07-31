@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -10,7 +11,7 @@ class PostController extends Controller
 {
     public function index(Request $request)
     {
-        $posts = Post::with('category');
+        $posts = Post::with(['category', 'user']);
 
         if ($request->filled('search')) {
             $posts->where('title', 'like', '%' . $request->search . '%');
@@ -23,7 +24,7 @@ class PostController extends Controller
 
     public function create()
     {
-        $categories = \App\Models\Category::orderBy('name')->get();
+        $categories = Category::orderBy('name')->get();
 
         return view('posts.create', compact('categories'));
     }
@@ -42,7 +43,7 @@ class PostController extends Controller
             $validated['image'] = $request->file('image')->store('posts', 'public');
         }
 
-        Post::create($validated);
+        $request->user()->posts()->create($validated);
 
         return redirect()->route('posts.index')
             ->with('success', 'Post created successfully!');
@@ -55,13 +56,17 @@ class PostController extends Controller
 
     public function edit(Post $post)
     {
-        $categories = \App\Models\Category::orderBy('name')->get();
+        $this->authorize('update', $post);
+
+        $categories = Category::orderBy('name')->get();
 
         return view('posts.edit', compact('post', 'categories'));
     }
 
     public function update(Request $request, Post $post)
     {
+        $this->authorize('update', $post);
+
         $validated = $request->validate([
             'title' => 'required|max:255',
             'content' => 'required',
@@ -72,12 +77,10 @@ class PostController extends Controller
 
         if ($request->hasFile('image')) {
 
-            // Delete old image
             if ($post->image) {
                 Storage::disk('public')->delete($post->image);
             }
 
-            // Store new image
             $validated['image'] = $request->file('image')->store('posts', 'public');
         }
 
@@ -89,6 +92,8 @@ class PostController extends Controller
 
     public function destroy(Post $post)
     {
+        $this->authorize('delete', $post);
+
         if ($post->image) {
             Storage::disk('public')->delete($post->image);
         }

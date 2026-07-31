@@ -15,6 +15,7 @@ class Post extends Model
         'published_at',
         'category_id',
         'image',
+        'user_id',
     ];
 
     protected $casts = [
@@ -24,5 +25,10 @@ class Post extends Model
     public function category()
     {
         return $this->belongsTo(Category::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }
