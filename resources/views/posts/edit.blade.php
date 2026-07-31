@@ -4,7 +4,7 @@
 
 <h1 class="mb-4">Edit Post</h1>
 
-<form action="{{ route('posts.update', $post) }}" method="POST">
+<form action="{{ route('posts.update', $post) }}" method="POST" enctype="multipart/form-data">
 
     @csrf
     @method('PUT')
@@ -42,7 +42,6 @@
     </div>
 
     <div class="mb-3">
-
         <label class="form-label">
             Category
         </label>
@@ -69,6 +68,36 @@
 
         </select>
 
+    </div>
+
+    @if($post->image)
+        <div class="mb-3">
+            <label class="form-label">
+                Current Image
+            </label>
+
+            <br>
+
+            <img
+                src="{{ asset('storage/' . $post->image) }}"
+                alt="{{ $post->title }}"
+                class="img-fluid rounded mb-2"
+                style="max-height:250px;"
+            >
+        </div>
+    @endif
+
+    <div class="mb-3">
+        <label class="form-label">
+            Replace Image
+        </label>
+
+        <input
+            type="file"
+            name="image"
+            class="form-control"
+            accept="image/*"
+        >
     </div>
 
     <button class="btn btn-success">

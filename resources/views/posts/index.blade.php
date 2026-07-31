@@ -33,6 +33,15 @@
 <div class="card mb-3">
     <div class="card-body">
 
+        @if($post->image)
+            <img
+                src="{{ asset('storage/' . $post->image) }}"
+                alt="{{ $post->title }}"
+                class="img-fluid rounded mb-3"
+                style="max-height:250px; object-fit:cover;"
+            >
+        @endif
+
         <h3 class="card-title">
             <a
                 href="{{ route('posts.show', $post) }}"

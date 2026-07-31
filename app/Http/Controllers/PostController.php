@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
@@ -34,7 +35,12 @@ class PostController extends Controller
             'content' => 'required',
             'published_at' => 'nullable|date',
             'category_id' => 'nullable|exists:categories,id',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
+
+        if ($request->hasFile('image')) {
+            $validated['image'] = $request->file('image')->store('posts', 'public');
+        }
 
         Post::create($validated);
 
@@ -61,7 +67,19 @@ class PostController extends Controller
             'content' => 'required',
             'published_at' => 'nullable|date',
             'category_id' => 'nullable|exists:categories,id',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
+
+        if ($request->hasFile('image')) {
+
+            // Delete old image
+            if ($post->image) {
+                Storage::disk('public')->delete($post->image);
+            }
+
+            // Store new image
+            $validated['image'] = $request->file('image')->store('posts', 'public');
+        }
 
         $post->update($validated);
 
@@ -71,6 +89,10 @@ class PostController extends Controller
 
     public function destroy(Post $post)
     {
+        if ($post->image) {
+            Storage::disk('public')->delete($post->image);
+        }
+
         $post->delete();
 
         return redirect()->route('posts.index')

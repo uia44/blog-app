@@ -4,7 +4,7 @@
 
 <h1 class="mb-4">Create New Post</h1>
 
-<form action="{{ route('posts.store') }}" method="POST">
+<form action="{{ route('posts.store') }}" method="POST" enctype="multipart/form-data">
 
     @csrf
 
@@ -41,7 +41,6 @@
     </div>
 
     <div class="mb-3">
-
         <label class="form-label">
             Category
         </label>
@@ -67,7 +66,19 @@
             @endforeach
 
         </select>
+    </div>
 
+    <div class="mb-3">
+        <label class="form-label">
+            Image
+        </label>
+
+        <input
+            type="file"
+            name="image"
+            class="form-control"
+            accept="image/*"
+        >
     </div>
 
     <button class="btn btn-primary">

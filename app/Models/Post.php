@@ -14,6 +14,7 @@ class Post extends Model
         'content',
         'published_at',
         'category_id',
+        'image',
     ];
 
     protected $casts = [
