@@ -20,6 +20,14 @@
                 {{ $post->published_at ?? 'Draft' }}
             </p>
 
+            <a href="{{ route('posts.edit', $post) }}">Edit</a>
+
+            <form action="{{ route('posts.destroy', $post) }}" method="POST" style="display:inline;">
+                @csrf
+                @method('DELETE')
+                <button type="submit">Delete</button>
+            </form>
+
             <hr>
         </div>
     @empty
