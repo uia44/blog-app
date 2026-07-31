@@ -7,9 +7,15 @@ use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $posts = Post::latest()->paginate(5);
+        $posts = Post::query();
+
+        if ($request->filled('search')) {
+            $posts->where('title', 'like', '%' . $request->search . '%');
+        }
+
+        $posts = $posts->latest()->paginate(5)->withQueryString();
 
         return view('posts.index', compact('posts'));
     }

@@ -4,9 +4,29 @@
 
 <h1 class="mb-4">Blog Posts</h1>
 
-<a href="{{ route('posts.create') }}" class="btn btn-primary mb-3">
-    Create New Post
-</a>
+<div class="d-flex justify-content-between align-items-center mb-3">
+
+    <form action="{{ route('posts.index') }}" method="GET" class="d-flex">
+
+        <input
+            type="text"
+            name="search"
+            class="form-control me-2"
+            placeholder="Search posts..."
+            value="{{ request('search') }}"
+        >
+
+        <button class="btn btn-outline-primary">
+            Search
+        </button>
+
+    </form>
+
+    <a href="{{ route('posts.create') }}" class="btn btn-primary">
+        Create New Post
+    </a>
+
+</div>
 
 @forelse($posts as $post)
 
