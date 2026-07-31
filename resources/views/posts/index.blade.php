@@ -34,7 +34,12 @@
     <div class="card-body">
 
         <h3 class="card-title">
-            {{ $post->title }}
+            <a
+                href="{{ route('posts.show', $post) }}"
+                class="text-decoration-none"
+            >
+                {{ $post->title }}
+            </a>
         </h3>
 
         <p class="card-text">
@@ -45,6 +50,10 @@
             <strong>Published:</strong>
             {{ $post->published_at?->format('d M Y, H:i') ?? 'Draft' }}
         </p>
+
+        <a href="{{ route('posts.show', $post) }}" class="btn btn-info btn-sm">
+            View
+        </a>
 
         <a href="{{ route('posts.edit', $post) }}" class="btn btn-warning btn-sm">
             Edit
@@ -75,7 +84,7 @@
 
 @endforelse
 
-<div class="mt-4">
+<div class="mt-4 d-flex justify-content-center">
     {{ $posts->links() }}
 </div>
 
