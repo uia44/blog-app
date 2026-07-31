@@ -23,7 +23,7 @@
 
         <p class="text-muted">
             <strong>Published:</strong>
-            {{ $post->published_at ?? 'Draft' }}
+            {{ $post->published_at?->format('d M Y, H:i') ?? 'Draft' }}
         </p>
 
         <a href="{{ route('posts.edit', $post) }}" class="btn btn-warning btn-sm">
