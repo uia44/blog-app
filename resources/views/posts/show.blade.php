@@ -5,7 +5,7 @@
 <div class="row justify-content-center">
     <div class="col-md-8">
 
-        <div class="card">
+        <div class="card mb-4">
             <div class="card-body">
 
                 <h1 class="card-title">
@@ -73,6 +73,108 @@
                     @endauth
 
                 </div>
+
+            </div>
+        </div>
+
+        {{-- Comments --}}
+        <div class="card">
+            <div class="card-body">
+
+                <h3 class="mb-3">
+                    Comments ({{ $post->comments->count() }})
+                </h3>
+
+                @auth
+
+                    <form action="{{ route('comments.store', $post) }}" method="POST">
+
+                        @csrf
+
+                        <div class="mb-3">
+                            <textarea
+                                name="content"
+                                class="form-control @error('content') is-invalid @enderror"
+                                rows="3"
+                                placeholder="Write a comment..."
+                                required
+                            >{{ old('content') }}</textarea>
+
+                            @error('content')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+
+                        <button class="btn btn-primary">
+                            Add Comment
+                        </button>
+
+                    </form>
+
+                    <hr>
+
+                @else
+
+                    <div class="alert alert-info">
+                        Please <a href="{{ route('login') }}">login</a> to leave a comment.
+                    </div>
+
+                @endauth
+
+                @forelse($post->comments->sortByDesc('created_at') as $comment)
+
+                    <div class="border rounded p-3 mb-3">
+
+                        <div class="d-flex justify-content-between align-items-start">
+
+                            <div>
+                                <strong>{{ $comment->user->name }}</strong>
+
+                                <br>
+
+                                <small class="text-muted">
+                                    {{ $comment->created_at->format('d M Y H:i') }}
+                                </small>
+                            </div>
+
+                            @auth
+                                @if(auth()->id() === $comment->user_id)
+
+                                    <form
+                                        action="{{ route('comments.destroy', $comment) }}"
+                                        method="POST"
+                                        onsubmit="return confirm('Delete this comment?')"
+                                    >
+                                        @csrf
+                                        @method('DELETE')
+
+                                        <button class="btn btn-sm btn-danger">
+                                            Delete
+                                        </button>
+                                    </form>
+
+                                @endif
+                            @endauth
+
+                        </div>
+
+                        <hr>
+
+                        <p class="mb-0">
+                            {{ $comment->content }}
+                        </p>
+
+                    </div>
+
+                @empty
+
+                    <div class="alert alert-light">
+                        No comments yet.
+                    </div>
+
+                @endforelse
 
             </div>
         </div>
